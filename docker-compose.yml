@@ -1,0 +1,39 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: agendamento_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASS:-admin123}
+      POSTGRES_DB: ${DB_NAME:-agendamento}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${DB_USER:-admin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agendamento_api
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-admin}
+      - DB_PASS=${DB_PASS:-admin123}
+      - DB_NAME=${DB_NAME:-agendamento}
+      - JWT_SECRET=${JWT_SECRET:-supersecretkey_change_in_prod}
+
+volumes:
+  pgdata:
