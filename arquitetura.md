@@ -4,7 +4,7 @@ Este documento descreve a arquitetura geral do sistema de agendamento corporativ
 
 ## Visão Geral
 
-O sistema baseia-se em uma arquitetura de microserviços simplificada (Monolito Modular) encapsulada em *containers* Docker. 
+O sistema baseia-se em uma arquitetura de microserviços simplificada (Projeto Modular) encapsulada em *containers* Docker. 
 A stack principal é composta por **Golang e Gin** para a API, e **PostgreSQL** para persistência, com o frontend renderizado e servido pela própria aplicação.
 
 ## Diagrama de Blocos C4-Level 2 (Container)
